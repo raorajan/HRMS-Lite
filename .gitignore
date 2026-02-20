@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+/media
+/staticfiles
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build
+dist/
+build/
+*.local
+
+# Vite
+.vite/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# MongoDB
+*.db
+*.lock
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Assessment files (optional - remove if you want to commit)
+ASSESSMENT.md
+COMMIT_PLAN.md
+commit-incremental.bat
