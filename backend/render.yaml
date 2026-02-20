@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: hrms-lite-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn core.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: MONGO_URI
+        sync: false
+      - key: DB_NAME
+        value: hrms_lite
+      - key: ALLOWED_HOSTS
+        value: hrms-lite-backend.onrender.com
+      - key: CORS_ALLOW_ALL_ORIGINS
+        value: True
