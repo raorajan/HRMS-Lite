@@ -115,7 +115,7 @@ The application will be available at `http://localhost:5173`
 
 ## 🔗 Links
 
-- **Live Application**: [To be deployed]
+- **Live Application**: https://hrms-lite.vercel.app
 - **GitHub Repository**: https://github.com/raorajan/HRMS-Lite
 
 ## 📄 License

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { employeeService, attendanceService } from '../api';
-import { Search, Calendar as CalendarIcon, CheckCircle, XCircle } from 'lucide-react';
+import { Search, Calendar as CalendarIcon } from 'lucide-react';
+import { AttendanceSkeleton } from '../components/LoadingSkeleton';
 
 const Attendance = () => {
   const [employees, setEmployees] = useState([]);
@@ -8,7 +9,9 @@ const Attendance = () => {
   const [history, setHistory] = useState([]);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchEmployees();
@@ -16,21 +19,28 @@ const Attendance = () => {
 
   const fetchEmployees = async () => {
     try {
+      setInitialLoading(true);
       const res = await employeeService.getAll();
       setEmployees(res.data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setInitialLoading(false);
     }
   };
 
   const handleMark = async (empId, status) => {
     setMessage('');
+    setError('');
     try {
       await attendanceService.mark({ employee_id: empId, date, status });
       setMessage(`Marked ${empId} as ${status}`);
       if (selectedEmp === empId) fetchHistory(empId);
     } catch (err) {
-      setMessage(err.response?.data?.non_field_errors?.[0] || 'Already marked for today.');
+      const errorMsg = err.response?.data?.non_field_errors?.[0] || 
+                       err.response?.data?.detail || 
+                       'Failed to mark attendance. Please try again.';
+      setError(errorMsg);
     }
   };
 
@@ -47,14 +57,16 @@ const Attendance = () => {
     }
   };
 
+  if (initialLoading) return <AttendanceSkeleton />;
+
   return (
-    <div className="animate-up">
-      <header className="page-header">
+    <div className="animate-up" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <header className="page-header" style={{ flexShrink: 0, marginBottom: '1.5rem' }}>
         <h2 className="page-title">Attendance Tracker</h2>
         <p style={{ color: 'var(--text-secondary)' }}>Track team presence and historical engagement</p>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(400px, 1fr) 400px', gap: '2.5rem' }}>
+      <div className="attendance-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '1.5rem', flex: 1, overflow: 'hidden' }}>
         <div className="card-premium">
           <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', alignItems: 'center' }}>
              <div style={{ background: 'var(--bg-app)', padding: '0.75rem', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
@@ -63,7 +75,8 @@ const Attendance = () => {
              </div>
           </div>
           
-          {message && <p style={{ color: 'var(--primary)', marginBottom: '1.5rem', fontWeight: 600, padding: '0.75rem', background: 'var(--primary-glow)', borderRadius: '8px' }}>{message}</p>}
+          {message && <p style={{ color: '#166534', marginBottom: '1rem', fontWeight: 600, padding: '0.75rem', background: '#dcfce7', borderRadius: '8px', border: '1px solid #86efac' }}>{message}</p>}
+                    {error && <p style={{ color: '#991b1b', marginBottom: '1rem', fontWeight: 600, padding: '0.75rem', background: '#fee2e2', borderRadius: '8px', border: '1px solid #fca5a5' }}>{error}</p>}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {employees.map(emp => (
@@ -76,7 +89,7 @@ const Attendance = () => {
                   <p style={{ fontWeight: 700, fontSize: '1.1rem' }}>{emp.full_name}</p>
                   <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{emp.employee_id} • {emp.department}</p>
                 </div>
-                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <div className="attendance-actions" style={{ display: 'flex', gap: '0.75rem' }}>
                   <button className="btn" style={{ background: '#dcfce7', color: '#166534', minWidth: '100px', justifyContent: 'center' }} onClick={() => handleMark(emp.employee_id, 'Present')}>Present</button>
                   <button className="btn" style={{ background: '#fee2e2', color: '#991b1b', minWidth: '100px', justifyContent: 'center' }} onClick={() => handleMark(emp.employee_id, 'Absent')}>Absent</button>
                 </div>
@@ -85,7 +98,7 @@ const Attendance = () => {
           </div>
         </div>
 
-        <div className="card-premium" style={{ height: 'fit-content', position: 'sticky', top: '100px' }}>
+        <div className="card-premium attendance-sidebar" style={{ height: 'fit-content', position: 'sticky', top: '100px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border-light)' }}>
             <CalendarIcon size={24} style={{ color: 'var(--secondary)' }} />
             <h3 style={{ fontSize: '1.25rem' }}>History {selectedEmp && <span style={{ color: 'var(--primary)' }}>({selectedEmp})</span>}</h3>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { attendanceService } from '../api';
-import { Users, CheckCircle, XCircle, TrendingUp } from 'lucide-react';
+import { Users, CheckCircle, TrendingUp } from 'lucide-react';
+import { DashboardSkeleton } from '../components/LoadingSkeleton';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({ total_employees: 0, total_attendance_records: 0 });
@@ -13,16 +14,16 @@ const Dashboard = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="container">Loading Dashboard...</div>;
+  if (loading) return <DashboardSkeleton />;
 
   return (
-    <div className="animate-up">
-      <header className="page-header">
+    <div className="animate-up" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <header className="page-header" style={{ flexShrink: 0, marginBottom: '1.5rem' }}>
         <h2 className="page-title">Pulse Dashboard</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Welcome back, Admin. Here's what's happening today.</p>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+      <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', flexShrink: 0 }}>
         <div className="card-premium" style={{ borderLeft: '6px solid var(--primary)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <div style={{ padding: '0.75rem', background: 'var(--primary-glow)', borderRadius: '12px', color: 'var(--primary)' }}>
@@ -57,10 +58,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="card-premium" style={{ marginTop: '3rem', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', color: 'white' }}>
-        <h4 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>System Status: Operational</h4>
-        <p style={{ color: 'var(--text-muted)' }}>All services are running smoothly. Database connection verified via PyMongo health check.</p>
-      </div>
     </div>
   );
 };

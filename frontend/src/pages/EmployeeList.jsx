@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { employeeService } from '../api';
 import { Trash2, UserPlus, X } from 'lucide-react';
+import { TableSkeleton } from '../components/LoadingSkeleton';
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ employee_id: '', full_name: '', email: '', department: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchEmployees();
@@ -14,10 +16,13 @@ const EmployeeList = () => {
 
   const fetchEmployees = async () => {
     try {
+      setLoading(true);
       const res = await employeeService.getAll();
       setEmployees(res.data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,6 +40,13 @@ const EmployeeList = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    // Validate department is selected
+    if (!formData.department) {
+      setError('Please select a department.');
+      return;
+    }
+    
     try {
       await employeeService.create(formData);
       setShowModal(false);
@@ -50,19 +62,19 @@ const EmployeeList = () => {
   };
 
   return (
-    <div className="animate-up">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-        <header className="page-header" style={{ marginBottom: 0 }}>
-          <h2 className="page-title">Team Directory</h2>
-          <p style={{ color: 'var(--text-secondary)' }}>Manage and track your organization's roster</p>
-        </header>
+    <div className="animate-up" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexShrink: 0 }}>
+        <h2 className="page-title" style={{ marginBottom: 0 }}>Team Directory</h2>
         <button className="btn btn-primary" style={{ padding: '0.875rem 1.5rem', borderRadius: 'var(--radius-md)' }} onClick={() => setShowModal(true)}>
           <UserPlus size={20} /> Add Member
         </button>
       </div>
 
-      <div className="card-premium" style={{ padding: '1rem' }}>
-        <table className="table-premium">
+      {loading ? (
+        <TableSkeleton rows={3} />
+      ) : (
+      <div className="card-premium" style={{ padding: '0', flex: 1, overflow: 'auto' }}>
+        <table className="table-premium" style={{ width: '100%', margin: 0 }}>
           <thead>
             <tr>
               <th>ID</th>
@@ -97,14 +109,11 @@ const EmployeeList = () => {
           </tbody>
         </table>
       </div>
+      )}
 
       {showModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(8px)',
-          display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000
-        }}>
-          <div className="card-premium animate-up" style={{ width: '100%', maxWidth: '500px', padding: '2.5rem' }}>
+        <div className="modal-overlay">
+          <div className="card-premium animate-up" style={{ width: '100%', maxWidth: '500px', padding: '2.5rem',marginTop:'2rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
               <h3 style={{ fontSize: '1.5rem' }}>New Team Member</h3>
               <button onClick={() => setShowModal(false)} style={{ color: 'var(--text-muted)' }}><X size={24} /></button>
