@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { employeeService } from '../api';
 import { Trash2, UserPlus, X } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import { TableSkeleton } from '../components/LoadingSkeleton';
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ employee_id: '', full_name: '', email: '', department: '' });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -30,8 +30,10 @@ const EmployeeList = () => {
     if (window.confirm('Are you sure you want to delete this employee?')) {
       try {
         await employeeService.delete(id);
+        toast.success('Employee deleted successfully');
         fetchEmployees();
       } catch (err) {
+        toast.error('Failed to delete employee');
         console.error(err);
       }
     }
@@ -39,24 +41,24 @@ const EmployeeList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     
     // Validate department is selected
     if (!formData.department) {
-      setError('Please select a department.');
+      toast.error('Please select a department.');
       return;
     }
     
     try {
       await employeeService.create(formData);
+      toast.success('Employee added successfully');
       setShowModal(false);
       setFormData({ employee_id: '', full_name: '', email: '', department: '' });
       fetchEmployees();
     } catch (err) {
       if (err.response && err.response.data) {
-        setError(Object.values(err.response.data).join(' '));
+        toast.error(Object.values(err.response.data).join(' '));
       } else {
-        setError('Failed to add employee.');
+        toast.error('Failed to add employee.');
       }
     }
   };
@@ -111,14 +113,17 @@ const EmployeeList = () => {
       </div>
       )}
 
-      {showModal && (
-        <div className="modal-overlay">
+         {showModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(8px)',
+          display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000
+        }}>
           <div className="card-premium animate-up" style={{ width: '100%', maxWidth: '500px', padding: '2.5rem',marginTop:'2rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
               <h3 style={{ fontSize: '1.5rem' }}>New Team Member</h3>
               <button onClick={() => setShowModal(false)} style={{ color: 'var(--text-muted)' }}><X size={24} /></button>
             </div>
-            {error && <p style={{ color: 'var(--danger)', marginBottom: '1.5rem', padding: '0.75rem', background: '#fef2f2', borderRadius: '8px', border: '1px solid #fecaca' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
               <div style={{ display: 'grid', gap: '1.25rem' }}>
                 <div>
