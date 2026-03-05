@@ -18,7 +18,7 @@ const Sidebar = () => {
         <div>HRMS<span>Lite</span></div>
       </div>
       
-      <div style={{ flex: 1 }}>
+      <div className="flex-1">
         <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
           <LayoutDashboard size={20} /> Dashboard
         </NavLink>
@@ -30,11 +30,11 @@ const Sidebar = () => {
         </NavLink>
       </div>
 
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
-        <div className="nav-item" style={{ cursor: 'pointer' }}>
+      <div className="border-top-subtle pt-1-5rem">
+        <div className="nav-item cursor-pointer">
           <Settings size={20} /> Settings
         </div>
-        <div className="nav-item" style={{ cursor: 'pointer', color: '#fca5a5' }}>
+        <div className="nav-item cursor-pointer text-danger-light">
           <LogOut size={20} /> Logout
         </div>
       </div>

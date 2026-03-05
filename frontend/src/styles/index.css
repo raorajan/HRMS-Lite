@@ -892,3 +892,40 @@ body {
     width: 100%;
   }
 }
+
+/* Common Utility Classes */
+.flex-1 {
+  flex: 1;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.mt-3rem {
+  margin-top: 3rem !important;
+}
+
+.p-1rem {
+  padding: 1rem !important;
+}
+
+.p-1-5rem {
+  padding: 1.5rem !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.text-danger-light {
+  color: #fca5a5 !important;
+}
+
+.border-top-subtle {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pt-1-5rem {
+  padding-top: 1.5rem !important;
+}

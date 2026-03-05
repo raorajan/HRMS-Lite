@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { employeeService } from '../api';
-import { Trash2, UserPlus, X } from 'lucide-react';
+import { employeeService, attendanceService } from '../api';
+import { Trash2, UserPlus, X, Calendar } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { TableSkeleton } from '../components/LoadingSkeleton';
+import '../styles/EmployeeList.css';
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [selectedEmp, setSelectedEmp] = useState(null);
+  const [attendanceHistory, setAttendanceHistory] = useState([]);
   const [formData, setFormData] = useState({ employee_id: '', full_name: '', email: '', department: '' });
   const [loading, setLoading] = useState(true);
+  const [historyLoading, setHistoryLoading] = useState(false);
 
   useEffect(() => {
     fetchEmployees();
@@ -39,10 +44,24 @@ const EmployeeList = () => {
     }
   };
 
+  const handleShowHistory = async (emp) => {
+    setSelectedEmp(emp);
+    setShowHistoryModal(true);
+    setHistoryLoading(true);
+    try {
+      const res = await attendanceService.getByEmployee(emp.employee_id);
+      setAttendanceHistory(res.data);
+    } catch (err) {
+      toast.error('Failed to fetch attendance history');
+      console.error(err);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate department is selected
     if (!formData.department) {
       toast.error('Please select a department.');
       return;
@@ -64,10 +83,10 @@ const EmployeeList = () => {
   };
 
   return (
-    <div className="animate-up" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexShrink: 0 }}>
-        <h2 className="page-title" style={{ marginBottom: 0 }}>Team Directory</h2>
-        <button className="btn btn-primary" style={{ padding: '0.875rem 1.5rem', borderRadius: 'var(--radius-md)' }} onClick={() => setShowModal(true)}>
+    <div className="animate-up employee-list-container">
+      <div className="employee-list-header">
+        <h2 className="page-title employee-list-title">Team Directory</h2>
+        <button className="btn btn-primary btn-add-member" onClick={() => setShowModal(true)}>
           <UserPlus size={20} /> Add Member
         </button>
       </div>
@@ -75,32 +94,35 @@ const EmployeeList = () => {
       {loading ? (
         <TableSkeleton rows={3} />
       ) : (
-      <div className="card-premium" style={{ padding: '0', flex: 1, overflow: 'auto' }}>
-        <table className="table-premium" style={{ width: '100%', margin: 0 }}>
+      <div className="card-premium employee-table-container">
+        <table className="table-premium employee-table">
           <thead>
             <tr>
               <th>ID</th>
               <th>Full Name</th>
               <th>Email</th>
               <th>Department</th>
-              <th style={{ textAlign: 'right' }}>Actions</th>
+              <th className="text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {employees.length === 0 ? (
-              <tr><td colSpan="5" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No members found in the directory.</td></tr>
+              <tr><td colSpan="5" className="empty-state">No members found in the directory.</td></tr>
             ) : (
               employees.map(emp => (
                 <tr key={emp.employee_id}>
-                  <td style={{ fontWeight: 700, color: 'var(--primary)' }}># {emp.employee_id}</td>
-                  <td style={{ fontWeight: 600 }}>{emp.full_name}</td>
-                  <td style={{ color: 'var(--text-secondary)' }}>{emp.email}</td>
+                  <td className="employee-id-cell"># {emp.employee_id}</td>
+                  <td className="employee-name-cell">{emp.full_name}</td>
+                  <td className="employee-email-cell">{emp.email}</td>
                   <td>
-                    <span className="badge" style={{ background: 'var(--bg-app)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)' }}>
+                    <span className="badge employee-dept-badge">
                       {emp.department}
                     </span>
                   </td>
-                  <td style={{ textAlign: 'right' }}>
+                  <td className="text-right">
+                    <button className="btn btn-primary btn-history" title="View Attendance History" onClick={() => handleShowHistory(emp)}>
+                      <Calendar size={18} />
+                    </button>
                     <button className="btn btn-danger" title="Delete record" onClick={() => handleDelete(emp.employee_id)}>
                       <Trash2 size={18} />
                     </button>
@@ -113,33 +135,29 @@ const EmployeeList = () => {
       </div>
       )}
 
-         {showModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(8px)',
-          display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000
-        }}>
-          <div className="card-premium animate-up" style={{ width: '100%', maxWidth: '500px', padding: '2.5rem',marginTop:'2rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
-              <h3 style={{ fontSize: '1.5rem' }}>New Team Member</h3>
-              <button onClick={() => setShowModal(false)} style={{ color: 'var(--text-muted)' }}><X size={24} /></button>
+      {showModal && (
+        <div className="modal-overlay-custom">
+          <div className="card-premium animate-up modal-card-custom">
+            <div className="modal-header-custom">
+              <h3 className="modal-title-custom">New Team Member</h3>
+              <button onClick={() => setShowModal(false)} className="modal-close-btn"><X size={24} /></button>
             </div>
             <form onSubmit={handleSubmit}>
-              <div style={{ display: 'grid', gap: '1.25rem' }}>
+              <div className="form-grid-custom">
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Employee ID</label>
+                  <label className="form-label-custom">Employee ID</label>
                   <input required className="input-premium" placeholder="e.g. EMP-101" value={formData.employee_id} onChange={e => setFormData({...formData, employee_id: e.target.value})} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Full Name</label>
+                  <label className="form-label-custom">Full Name</label>
                   <input required className="input-premium" placeholder="John Doe" value={formData.full_name} onChange={e => setFormData({...formData, full_name: e.target.value})} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Official Email</label>
+                  <label className="form-label-custom">Official Email</label>
                   <input required type="email" className="input-premium" placeholder="john@company.com" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Department</label>
+                  <label className="form-label-custom">Department</label>
                   <select className="input-premium" value={formData.department} onChange={e => setFormData({...formData, department: e.target.value})}>
                     <option value="">Choose department...</option>
                     <option value="Engineering">Engineering</option>
@@ -149,9 +167,35 @@ const EmployeeList = () => {
                     <option value="Sales">Sales</option>
                   </select>
                 </div>
-                <button type="submit" className="btn btn-primary" style={{ justifyContent: 'center', padding: '1rem', marginTop: '1rem' }}>Assign Member</button>
+                <button type="submit" className="btn btn-primary btn-submit-member">Assign Member</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showHistoryModal && selectedEmp && (
+        <div className="modal-overlay-custom">
+          <div className="card-premium animate-up modal-card-custom">
+            <div className="modal-header-custom">
+              <h3 className="modal-title-custom">Attendance History: {selectedEmp.full_name}</h3>
+              <button onClick={() => setShowHistoryModal(false)} className="modal-close-btn"><X size={24} /></button>
+            </div>
+            
+            {historyLoading ? (
+              <div className="history-modal-loading">Loading records...</div>
+            ) : (
+              <div className="history-modal-list">
+                {attendanceHistory.length === 0 ? (
+                  <p className="history-empty">No records found for this member.</p>
+                ) : attendanceHistory.map((rec, i) => (
+                  <div key={i} className="history-item">
+                    <span className="history-date">{rec.date}</span>
+                    <span className={`badge badge-${rec.status.toLowerCase()}`}>{rec.status}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

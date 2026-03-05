@@ -16,6 +16,8 @@ export const employeeService = {
 export const attendanceService = {
   mark: (data) => api.post('/attendance/mark/', data),
   getByEmployee: (id) => api.get(`/attendance/employee/${id}/`),
+  getByDate: (date) => api.get(`/attendance/by-date/?date=${date}`),
+  deleteRecord: (employeeId, date) => api.delete(`/attendance/by-date/?employee_id=${employeeId}&date=${date}`),
   getSummary: () => api.get('/attendance/summary/'),
 };
 

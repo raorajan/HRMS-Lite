@@ -1,0 +1,131 @@
+.employee-list-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.employee-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+}
+
+.employee-list-title {
+    margin-bottom: 0;
+}
+
+.btn-add-member {
+    padding: 0.875rem 1.5rem;
+    border-radius: var(--radius-md);
+}
+
+.employee-table-container {
+    padding: 0;
+    flex: 1;
+    overflow: auto;
+}
+
+.employee-table {
+    width: 100%;
+    margin: 0;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+}
+
+.employee-id-cell {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.employee-name-cell {
+    font-weight: 600;
+}
+
+.employee-email-cell {
+    color: var(--text-secondary);
+}
+
+.employee-dept-badge {
+    background: var(--bg-app);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+}
+
+.modal-overlay-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-card-custom {
+    width: 100%;
+    max-width: 500px;
+    padding: 2.5rem;
+    margin-top: 2rem;
+}
+
+.modal-header-custom {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.modal-title-custom {
+    font-size: 1.5rem;
+}
+
+.modal-close-btn {
+    color: var(--text-muted);
+}
+
+.form-grid-custom {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.form-label-custom {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.btn-submit-member {
+    justify-content: center;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.btn-history {
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.history-modal-loading {
+    text-align: center;
+    padding: 2rem;
+}
+
+.history-modal-list {
+    max-height: 400px;
+    overflow-y: auto;
+}

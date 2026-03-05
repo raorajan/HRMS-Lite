@@ -1,0 +1,95 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.dashboard-header {
+    flex-shrink: 0;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-subheader {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.dashboard-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    flex-shrink: 0;
+}
+
+.stat-card {
+    transition: var(--transition);
+}
+
+.stat-card-total-employees {
+    border-left: 6px solid var(--primary);
+}
+
+.stat-card-attendance-records {
+    border-left: 6px solid var(--success);
+}
+
+.stat-card-engagement-rate {
+    border-left: 6px solid var(--warning);
+}
+
+.stat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.stat-icon-wrapper {
+    padding: 0.75rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-employees {
+    background: var(--primary-glow);
+    color: var(--primary);
+}
+
+.icon-attendance {
+    background: #dcfce7;
+    color: var(--success);
+}
+
+.icon-engagement {
+    background: #fef3c7;
+    color: var(--warning);
+}
+
+.stat-trend {
+    color: var(--success);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    margin-top: 0.5rem;
+}
+
+.stat-meta {
+    color: var(--success);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.stat-meta-muted {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}

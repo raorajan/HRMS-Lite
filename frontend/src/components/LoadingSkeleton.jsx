@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const CardSkeleton = () => (
-  <div className="card-premium" style={{ padding: '1.5rem' }}>
+  <div className="card-premium p-1-5rem">
     <div className="skeleton-header">
       <div className="skeleton-icon"></div>
       <div className="skeleton-badge"></div>
@@ -12,7 +12,7 @@ export const CardSkeleton = () => (
 );
 
 export const TableSkeleton = ({ rows = 5 }) => (
-  <div className="card-premium" style={{ padding: '1rem' }}>
+  <div className="card-premium p-1rem">
     <div className="skeleton-table">
       <div className="skeleton-row skeleton-header-row">
         <div className="skeleton-cell"></div>
@@ -45,7 +45,7 @@ export const TableSkeleton = ({ rows = 5 }) => (
 );
 
 export const AttendanceSkeleton = () => (
-  <div className="attendance-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(400px, 1fr) 400px', gap: '2.5rem' }}>
+  <div className="attendance-grid-layout p-1-5rem">
     <div className="card-premium">
       <div className="skeleton-date-picker"></div>
       <div className="skeleton-attendance-list">
@@ -80,12 +80,12 @@ export const DashboardSkeleton = () => (
       <div className="skeleton-title"></div>
       <div className="skeleton-subtitle"></div>
     </div>
-    <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+    <div className="dashboard-grid dashboard-stats-grid">
       <CardSkeleton />
       <CardSkeleton />
       <CardSkeleton />
     </div>
-    <div className="card-premium" style={{ marginTop: '3rem', height: '120px' }}>
+    <div className="card-premium mt-3rem">
       <div className="skeleton-status"></div>
     </div>
   </div>

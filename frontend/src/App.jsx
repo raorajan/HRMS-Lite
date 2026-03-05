@@ -5,7 +5,7 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import EmployeeList from './pages/EmployeeList';
 import Attendance from './pages/Attendance';
-import './App.css';
+import './styles/App.css';
 
 function App() {
   return (

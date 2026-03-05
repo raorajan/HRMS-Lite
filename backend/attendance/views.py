@@ -21,6 +21,25 @@ class AttendanceListView(APIView):
         records = list(db.attendance.find({"employee_id": employee_id}, {"_id": 0}))
         return Response(records)
 
+class AttendanceByDateView(APIView):
+    def get(self, request):
+        date = request.query_params.get('date')
+        if not date:
+            return Response({"error": "Date parameter is required."}, status=status.HTTP_400_BAD_REQUEST)
+        records = list(db.attendance.find({"date": date}, {"_id": 0}))
+        return Response(records)
+
+    def delete(self, request):
+        employee_id = request.query_params.get('employee_id')
+        date = request.query_params.get('date')
+        if not employee_id or not date:
+            return Response({"error": "employee_id and date parameters are required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        result = db.attendance.delete_one({"employee_id": employee_id, "date": date})
+        if result.deleted_count > 0:
+            return Response({"message": "Record deleted successfully."}, status=status.HTTP_200_OK)
+        return Response({"error": "Record not found."}, status=status.HTTP_404_NOT_FOUND)
+
 class AttendanceSummaryView(APIView):
     def get(self, request):
         # Bonus: Basic dashboard summary
