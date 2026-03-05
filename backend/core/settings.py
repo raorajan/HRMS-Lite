@@ -86,13 +86,17 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {}
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = os.getenv('CORS_ALLOW_ALL_ORIGINS', 'True').lower() == 'true'
-if not CORS_ALLOW_ALL_ORIGINS:
-    CORS_ALLOWED_ORIGINS = [
-        origin.strip() 
-        for origin in os.getenv('CORS_ALLOWED_ORIGINS', 'https://hrms-lite-frontend.vercel.app,https://hrms-lite-version.netlify.app').split(',')
-        if origin.strip()
-    ]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+# Fallback for strict environments (Netlify + Vercel)
+CORS_ALLOWED_ORIGINS = [
+    "https://hrms-lite-frontend.vercel.app",
+    "https://hrms-lite-version.netlify.app",
+]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.netlify\.app$",
+    r"^https://.*\.vercel\.app$",
+]
 
 
 # Password validation
