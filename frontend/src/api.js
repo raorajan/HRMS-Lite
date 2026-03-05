@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // Ensure the baseURL ends with a slash for consistent resolution
+  // BaseURL configured via environment variable
   baseURL: (import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api').replace(/\/?$/, '/'),
   headers: {
     'Content-Type': 'application/json',
@@ -9,19 +9,18 @@ const api = axios.create({
 });
 
 export const employeeService = {
-  // IMPORTANT: Django requires trailing slashes for these endpoints. 
-  // Removing them causes 301 redirects which can break CORS preflights.
-  getAll: () => api.get('employees/'),
-  create: (data) => api.post('employees/', data),
-  delete: (id) => api.delete(`employees/${id}/`),
+  // Endpoints updated to not use trailing slashes as per user request
+  getAll: () => api.get('employees'),
+  create: (data) => api.post('employees', data),
+  delete: (id) => api.delete(`employees/${id}`),
 };
 
 export const attendanceService = {
-  mark: (data) => api.post('attendance/mark/', data),
-  getByEmployee: (id) => api.get(`attendance/employee/${id}/`),
-  getByDate: (date) => api.get(`attendance/by-date/?date=${date}`),
-  deleteRecord: (employeeId, date) => api.delete(`attendance/by-date/?employee_id=${employeeId}&date=${date}`),
-  getSummary: () => api.get('attendance/summary/'),
+  mark: (data) => api.post('attendance/mark', data),
+  getByEmployee: (id) => api.get(`attendance/employee/${id}`),
+  getByDate: (date) => api.get(`attendance/by-date?date=${date}`),
+  deleteRecord: (employeeId, date) => api.delete(`attendance/by-date?employee_id=${employeeId}&date=${date}`),
+  getSummary: () => api.get('attendance/summary'),
 };
 
 export default api;

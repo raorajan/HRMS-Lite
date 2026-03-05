@@ -3,5 +3,5 @@ from .views import EmployeeListCreateView, EmployeeDeleteView
 
 urlpatterns = [
     path('', EmployeeListCreateView.as_view(), name='employee-list'),
-    path('<str:employee_id>/', EmployeeDeleteView.as_view(), name='employee-delete'),
+    path('<str:employee_id>', EmployeeDeleteView.as_view(), name='employee-delete'),
 ]
