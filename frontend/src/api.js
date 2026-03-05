@@ -9,6 +9,8 @@ const api = axios.create({
 });
 
 export const employeeService = {
+  // IMPORTANT: Django requires trailing slashes for these endpoints. 
+  // Removing them causes 301 redirects which can break CORS preflights.
   getAll: () => api.get('employees/'),
   create: (data) => api.post('employees/', data),
   delete: (id) => api.delete(`employees/${id}/`),
