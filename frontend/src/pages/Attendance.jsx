@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { employeeService, attendanceService } from '../api';
 import { Search, Calendar as CalendarIcon, Trash2, TrendingUp, CheckCircle, XCircle } from 'lucide-react';
-import { AttendanceSkeleton } from '../components/LoadingSkeleton';
+import { AttendanceSkeleton, HistorySkeleton } from '../components/LoadingSkeleton';
 import '../styles/Attendance.css';
 import { toast } from 'react-hot-toast';
 
@@ -159,7 +159,7 @@ const Attendance = () => {
               <p className="empty-text">Select a team member to view their attendance history.</p>
             </div>
           ) : loading ? (
-            <div className="history-loading">Loading records...</div>
+            <HistorySkeleton items={5} />
           ) : (
             <>
               {stats && (

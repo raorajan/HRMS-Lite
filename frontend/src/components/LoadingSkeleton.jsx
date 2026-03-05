@@ -44,6 +44,14 @@ export const TableSkeleton = ({ rows = 5 }) => (
   </div>
 );
 
+export const HistorySkeleton = ({ items = 4 }) => (
+  <div className="skeleton-history-list">
+    {Array.from({ length: items }).map((_, i) => (
+      <div key={i} className="skeleton-history-item"></div>
+    ))}
+  </div>
+);
+
 export const AttendanceSkeleton = () => (
   <div className="attendance-grid-layout p-1-5rem">
     <div className="card-premium">
@@ -65,11 +73,7 @@ export const AttendanceSkeleton = () => (
     </div>
     <div className="card-premium attendance-sidebar">
       <div className="skeleton-history-header"></div>
-      <div className="skeleton-history-list">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="skeleton-history-item"></div>
-        ))}
-      </div>
+      <HistorySkeleton items={4} />
     </div>
   </div>
 );
