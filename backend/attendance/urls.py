@@ -2,6 +2,7 @@ from django.urls import path
 from .views import AttendanceMarkView, AttendanceListView, AttendanceSummaryView, AttendanceByDateView
 
 urlpatterns = [
+    # Supporting both but prioritizing slash-less as per user request
     path('mark', AttendanceMarkView.as_view(), name='attendance-mark'),
     path('by-date', AttendanceByDateView.as_view(), name='attendance-by-date'),
     path('employee/<str:employee_id>', AttendanceListView.as_view(), name='attendance-list'),

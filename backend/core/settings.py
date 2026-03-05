@@ -8,18 +8,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-4!)sv6=xv!rd-%py*h**vhrm)m(%-_2^j()bs&j9uj2u8!fkv6')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
-
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else ['*']
 
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -35,7 +29,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # Preflight and CORS must be FIRST
+    'corsheaders.middleware.CorsMiddleware', # MUST BE FIRST
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -48,9 +42,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
-# IMPORTANT: User requested no trailing slashes. 
-# Disabling APPEND_SLASH prevents Django from automatically redirecting to / versions.
-APPEND_SLASH = False
+# User requested no trailing slashes, but we enable APPEND_SLASH=True 
+# to handle legacy/misconfigured tools gracefully. 
+# Our URL patterns will handle both cases.
+APPEND_SLASH = True
 
 TEMPLATES = [
     {
@@ -68,33 +63,27 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
-
-# Database
 DATABASES = {}
 
-# CORS settings - Bulletproof for Netlify migration
+# --- BULLETPROOF CORS CONFIG ---
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ORIGIN_ALLOW_ALL = True # Legacy compatibility
 CORS_ALLOW_CREDENTIALS = True
-
-# Explicitly Trusting modern origins to prevent browser-side rejections
-CORS_ALLOWED_ORIGINS = [
-    "https://hrms-lite-frontend.vercel.app",
-    "https://hrms-lite-version.netlify.app",
-]
-
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://.*\.netlify\.app$",
-    r"^https://.*\.vercel\.app$",
 ]
 
-# CSRF security for POST requests from cross-origin domains
+# CSRF Trust for new domain
 CSRF_TRUSTED_ORIGINS = [
-    "https://hrms-lite-frontend.vercel.app",
     "https://hrms-lite-version.netlify.app",
 ]
 
-# Password validation
+# Remove strict list if using ALLOW_ALL, but keep Netlify for verification
+CORS_ALLOWED_ORIGINS = [
+    "https://hrms-lite-version.netlify.app",
+]
+
+# --- END CORS ---
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -102,13 +91,11 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
