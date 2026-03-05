@@ -14,7 +14,7 @@ const Sidebar = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <LayoutDashboard size={32} />
+        <img src="/logo.svg" alt="HRMS-Lite" />
         <div>HRMS<span>Lite</span></div>
       </div>
       
