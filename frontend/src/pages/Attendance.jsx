@@ -123,8 +123,8 @@ const Attendance = () => {
             {employees.length === 0 ? (
               <div className="empty-search">No team members found.</div>
             ) : employees.map(emp => (
-              <div key={emp.employee_id} className={`attendance-item hover:shadow-md ${selectedEmp?.employee_id === emp.employee_id ? 'selected-emp' : ''}`}>
-                <div className="employee-info-clickable" onClick={() => fetchHistory(emp)}>
+              <div key={emp.employee_id} onClick={() => fetchHistory(emp)} className={`attendance-item hover:shadow-md ${selectedEmp?.employee_id === emp.employee_id ? 'selected-emp' : ''}`}>
+                <div className="employee-info-clickable" >
                   <p className="employee-name">{emp.full_name}</p>
                   <p className="employee-meta">{emp.employee_id} • {emp.department}</p>
                 </div>
